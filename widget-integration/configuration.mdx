@@ -1,0 +1,145 @@
+---
+title: 'Configuration'
+description: 'Customize widget appearance, behavior, and authentication settings'
+---
+
+Configure the widget to match your brand and application needs.
+
+## Automatic Configuration
+
+Using `cellId` is the simplest approach - the widget fetches all configuration automatically:
+
+```javascript
+window.OpenSesameCellConfig = {
+  cellId: 'your-cell-id-here'
+};
+```
+
+## Manual Configuration
+
+For more control, provide configuration directly:
+
+```javascript
+window.OpenSesameCellConfig = {
+  cellId: 'your-cell-id-here',
+  primaryColor: '#5E17EB',
+  secondaryColor: '#F3EEFD',
+  borderRadius: 32,
+  defaultWidth: 800,
+  bottomMargin: 25,
+  placeholderText: 'How can I help you?',
+  suggestedQuestions: [
+    'What are your hours?',
+    'How do I contact support?',
+    'What is your refund policy?'
+  ],
+  suggestedQuestionsBehavior: 'hover', // 'never' | 'always' | 'hover'
+  collapsedStyle: 'bar', // 'bar' | 'circular'
+  collapseIcon: 'x', // 'minus' | 'x'
+  userId: 'user-123',
+  auth: {
+    'Authorization': 'Bearer your-token-here'
+  }
+};
+```
+
+## Configuration Options
+
+<ParamField body="cellId" type="string" required>
+  Your unique cell identifier
+</ParamField>
+
+<ParamField body="primaryColor" type="string" default="#5E17EB">
+  Primary brand color (hex format)
+</ParamField>
+
+<ParamField body="secondaryColor" type="string" default="#F3EEFD">
+  Secondary color (hex format)
+</ParamField>
+
+<ParamField body="accentColor" type="string" default="#F3EEFD">
+  Accent color (hex format)
+</ParamField>
+
+<ParamField body="textColor" type="string" default="Auto">
+  Text color (auto-calculated from primary color if not provided)
+</ParamField>
+
+<ParamField body="borderColor" type="string" default="null">
+  Border color (hex format)
+</ParamField>
+
+<ParamField body="glowColor" type="string" default="null">
+  Glow effect color (hex format)
+</ParamField>
+
+<ParamField body="borderWidth" type="number" default="0">
+  Border width in pixels
+</ParamField>
+
+<ParamField body="borderRadius" type="number" default="32">
+  Border radius in pixels (maximum 32)
+</ParamField>
+
+<ParamField body="defaultWidth" type="number" default="800">
+  Default width when expanded (pixels)
+</ParamField>
+
+<ParamField body="bottomMargin" type="number" default="25">
+  Bottom margin in pixels
+</ParamField>
+
+<ParamField body="placeholderText" type="string" default="'What can I do for you?'">
+  Input placeholder text
+</ParamField>
+
+<ParamField body="suggestedQuestions" type="string[]" default="[]">
+  Array of suggested questions to display
+</ParamField>
+
+<ParamField body="suggestedQuestionsBehavior" type="string" default="'never'">
+  When to show suggestions: `'never'`, `'always'`, or `'hover'`
+</ParamField>
+
+<ParamField body="collapsedStyle" type="string" default="'bar'">
+  Collapsed state style: `'bar'` or `'circular'`
+</ParamField>
+
+<ParamField body="collapseIcon" type="string" default="'x'">
+  Collapse button icon: `'minus'` or `'x'`
+</ParamField>
+
+<ParamField body="logo" type="string" default="Auto">
+  Logo URL (auto-selected based on primary color if not provided)
+</ParamField>
+
+<ParamField body="userId" type="string" default="Auto">
+  User identifier (auto-derived from origin if not provided)
+</ParamField>
+
+<ParamField body="auth" type="object" default="{}">
+  Authentication headers (key-value pairs)
+</ParamField>
+
+<ParamField body="customHeaders" type="object" default="{}">
+  Custom HTTP headers for API requests
+</ParamField>
+
+## Runtime Configuration Updates
+
+Update widget configuration at runtime using `updateConfig()`:
+
+```javascript
+window.OpenSesameCellConfig.updateConfig({
+  primaryColor: '#FF5733',
+  borderRadius: 20,
+  defaultWidth: 600,
+  bottomMargin: 30,
+  placeholderText: 'Ask me anything!'
+});
+```
+
+<Tip>
+You can update configuration dynamically based on user preferences, screen size, or theme changes.
+</Tip>
+

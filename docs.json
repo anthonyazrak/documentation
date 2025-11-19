@@ -44,6 +44,17 @@
               "ai-tools/claude-code",
               "ai-tools/windsurf"
             ]
+          },
+          {
+            "group": "Widget Integration",
+            "pages": [
+              "widget-integration/introduction",
+              "widget-integration/installation",
+              "widget-integration/configuration",
+              "widget-integration/api-reference",
+              "widget-integration/examples",
+              "widget-integration/troubleshooting"
+            ]
           }
         ]
       },

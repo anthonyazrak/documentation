@@ -1,0 +1,48 @@
+---
+title: 'Widget Integration'
+description: 'Complete guide for integrating and using the OpenSesame embeddable widget in your application'
+---
+
+The OpenSesame widget is an embeddable chat interface that you can integrate into any web application. This guide covers everything you need to get started, from basic installation to advanced customization.
+
+## Quick Start
+
+The fastest way to get started is with automatic configuration using your Cell ID:
+
+```html
+<script>
+  window.OpenSesameCellConfig = {
+    cellId: 'your-cell-id-here'
+  };
+</script>
+<script src="https://cell.opensesame.dev/widget.js" async></script>
+<link rel="stylesheet" href="https://cell.opensesame.dev/widget.css">
+```
+
+The widget automatically:
+- Fetches your cell configuration from the API
+- Initializes with your branding and settings
+- Handles authentication
+- Is ready to use immediately
+
+<Tip>
+The CSS link is optional - the widget will inject it automatically if not provided.
+</Tip>
+
+## What's Next?
+
+<CardGroup cols={2}>
+  <Card title="Installation" icon="download" href="/widget-integration/installation">
+    Learn how to install the widget in HTML, Next.js, React Native, and other frameworks
+  </Card>
+  <Card title="Configuration" icon="gear" href="/widget-integration/configuration">
+    Customize colors, styling, behavior, and authentication settings
+  </Card>
+  <Card title="API Reference" icon="code" href="/widget-integration/api-reference">
+    Explore all available methods for controlling the widget programmatically
+  </Card>
+  <Card title="Examples" icon="lightbulb" href="/widget-integration/examples">
+    See complete integration examples for common use cases
+  </Card>
+</CardGroup>
+

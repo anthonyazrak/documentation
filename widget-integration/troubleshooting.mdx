@@ -1,0 +1,211 @@
+---
+title: 'Troubleshooting'
+description: 'Common issues and solutions for widget integration'
+---
+
+Solutions to common problems when integrating the widget.
+
+## Widget Not Appearing
+
+If the widget doesn't appear on your page:
+
+<Steps>
+  <Step title="Check browser console">
+    Open your browser's developer console and look for errors. Common issues include:
+    - Invalid `cellId`
+    - Network errors loading the widget script
+    - JavaScript errors preventing initialization
+  </Step>
+  
+  <Step title="Verify cellId">
+    Ensure your `cellId` is correct and matches your OpenSesame account.
+  </Step>
+  
+  <Step title="Check network tab">
+    Open the Network tab in developer tools and verify that `widget.js` loads successfully (status 200).
+  </Step>
+  
+  <Step title="Check ready state">
+    Verify the widget is ready:
+    ```javascript
+    console.log('Widget ready:', window.OpenSesameCellConfig.ready);
+    ```
+  </Step>
+</Steps>
+
+## Widget Not Responding
+
+If the widget appears but doesn't respond to interactions:
+
+<Steps>
+  <Step title="Check widget state">
+    Inspect the widget state:
+    ```javascript
+    const state = window.OpenSesameCellConfig.getState();
+    console.log('Widget state:', state);
+    ```
+  </Step>
+  
+  <Step title="Check for errors">
+    Verify if there are any errors:
+    ```javascript
+    if (window.OpenSesameCellConfig.hasError) {
+      const error = window.OpenSesameCellConfig.getError();
+      console.error('Error:', error);
+    }
+    ```
+  </Step>
+  
+  <Step title="Try retry">
+    Attempt to retry widget initialization:
+    ```javascript
+    await window.OpenSesameCellConfig.retry();
+    ```
+  </Step>
+</Steps>
+
+## Authentication Issues
+
+If you're experiencing authentication problems:
+
+<Steps>
+  <Step title="Verify auth headers">
+    Ensure authentication headers are set correctly:
+    ```javascript
+    window.OpenSesameCellConfig.config.auth = {
+      'Authorization': 'Bearer your-token-here'
+    };
+    ```
+  </Step>
+  
+  <Step title="Check token expiration">
+    Verify your authentication token hasn't expired and refresh if needed.
+  </Step>
+</Steps>
+
+## Styling Issues
+
+If the widget styling doesn't match your expectations:
+
+<Steps>
+  <Step title="Verify CSS is loaded">
+    The widget injects CSS automatically, but you can add it manually:
+    ```html
+    <link rel="stylesheet" href="https://cell.opensesame.dev/widget.css">
+    ```
+  </Step>
+  
+  <Step title="Check for CSS conflicts">
+    Inspect your page for CSS conflicts with your site's styles. Use browser developer tools to identify conflicting styles.
+  </Step>
+  
+  <Step title="Use updateConfig">
+    Adjust styling using `updateConfig`:
+    ```javascript
+    window.OpenSesameCellConfig.updateConfig({
+      primaryColor: '#FF0000',
+      borderRadius: 20
+    });
+    ```
+  </Step>
+</Steps>
+
+## API Methods Not Working
+
+If API methods aren't functioning:
+
+<Steps>
+  <Step title="Wait for widget to be ready">
+    Ensure the widget is ready before calling methods:
+    ```javascript
+    function waitForWidget() {
+      return new Promise((resolve) => {
+        if (window.OpenSesameCellConfig.ready) {
+          resolve();
+        } else {
+          window.OpenSesameCellConfig.onReady = resolve;
+        }
+      });
+    }
+    
+    await waitForWidget();
+    // Now use API methods
+    ```
+  </Step>
+  
+  <Step title="Check method exists">
+    Verify the method exists before calling it:
+    ```javascript
+    if (typeof window.OpenSesameCellConfig.show === 'function') {
+      window.OpenSesameCellConfig.show();
+    }
+    ```
+  </Step>
+</Steps>
+
+## Common Issues
+
+<AccordionGroup>
+  <Accordion title="Widget shows but doesn't respond to clicks">
+    Check for z-index conflicts or overlay elements that might be blocking interactions. Use browser developer tools to inspect the widget's z-index and ensure it's not being covered by other elements.
+  </Accordion>
+  
+  <Accordion title="Widget appears in wrong position">
+    Adjust `bottomMargin` in your configuration or use `updateConfig()` to change the position:
+    ```javascript
+    window.OpenSesameCellConfig.updateConfig({
+      bottomMargin: 50
+    });
+    ```
+  </Accordion>
+  
+  <Accordion title="Events not being tracked">
+    Verify the user is identified and check the Network tab for API calls. Ensure your `cellId` is correct and the widget has proper network access.
+  </Accordion>
+  
+  <Accordion title="Callbacks not firing">
+    Ensure callbacks are set before the widget initializes, or set them in the `onReady` callback:
+    ```javascript
+    window.OpenSesameCellConfig.onReady = function() {
+      // Set other callbacks here
+      window.OpenSesameCellConfig.onShow = function() {
+        console.log('Widget shown');
+      };
+    };
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Best Practices
+
+Follow these best practices to avoid common issues:
+
+<CardGroup cols={2}>
+  <Card title="Wait for ready state" icon="check-circle">
+    Always wait for the widget to be ready before using API methods
+  </Card>
+  <Card title="Identify users early" icon="user">
+    Identify users early for better analytics and personalization
+  </Card>
+  <Card title="Track important events" icon="chart-line">
+    Track important events to understand user behavior
+  </Card>
+  <Card title="Handle errors gracefully" icon="shield">
+    Handle errors gracefully with fallback UI
+  </Card>
+  <Card title="Use updateConfig for theming" icon="palette">
+    Use `updateConfig` for dynamic theming based on user preferences
+  </Card>
+  <Card title="Set up callbacks" icon="bell">
+    Set up callbacks to react to widget lifecycle events
+  </Card>
+</CardGroup>
+
+## Getting Help
+
+If you're still experiencing issues:
+
+- Check the [OpenSesame Documentation](https://docs.opensesame.dev)
+- Contact support at support@opensesame.dev
+- Report issues on GitHub
+

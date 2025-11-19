@@ -1,0 +1,286 @@
+---
+title: 'Examples'
+description: 'Complete integration examples for common use cases'
+---
+
+See how to integrate the widget in various scenarios.
+
+## Basic Integration
+
+Simple HTML integration:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My App</title>
+</head>
+<body>
+  <h1>Welcome to My App</h1>
+  
+  <script>
+    window.OpenSesameCellConfig = {
+      cellId: 'your-cell-id-here'
+    };
+  </script>
+  <script src="https://cell.opensesame.dev/widget.js" async></script>
+</body>
+</html>
+```
+
+## User Identification
+
+Identify users when they log in:
+
+```javascript
+// Identify user when they log in
+function onUserLogin(user) {
+  window.OpenSesameCellConfig.identify({
+    user_id: user.id,
+    email: user.email,
+    name: user.name,
+    company: {
+      id: user.companyId,
+      name: user.companyName
+    },
+    custom_attributes: {
+      plan: user.plan,
+      signup_date: user.signupDate
+    }
+  });
+}
+
+// Update user data when it changes
+function onUserUpdate(user) {
+  window.OpenSesameCellConfig.update({
+    email: user.newEmail,
+    custom_attributes: {
+      plan: user.newPlan
+    }
+  });
+}
+```
+
+## Event Tracking
+
+Track page views and custom events:
+
+```javascript
+// Track page views
+window.addEventListener('load', () => {
+  window.OpenSesameCellConfig.trackPageView({
+    title: document.title,
+    path: window.location.pathname
+  });
+});
+
+// Track custom events
+function onPurchaseComplete(order) {
+  window.OpenSesameCellConfig.trackEvent('purchase-completed', {
+    price: order.total,
+    currency: order.currency,
+    product: order.productName,
+    order_id: order.id
+  });
+}
+
+function onButtonClick(buttonName) {
+  window.OpenSesameCellConfig.trackEvent('button-clicked', {
+    button: buttonName,
+    page: window.location.pathname
+  });
+}
+```
+
+## Dynamic Theming
+
+Update widget appearance based on user preferences or screen size:
+
+```javascript
+// Update widget colors based on user preference
+function applyTheme(theme) {
+  window.OpenSesameCellConfig.updateConfig({
+    primaryColor: theme.primaryColor,
+    secondaryColor: theme.secondaryColor,
+    textColor: theme.textColor
+  });
+}
+
+// Update widget size based on screen size
+function updateWidgetSize() {
+  const isMobile = window.innerWidth < 768;
+  window.OpenSesameCellConfig.updateConfig({
+    defaultWidth: isMobile ? 400 : 800,
+    bottomMargin: isMobile ? 15 : 25
+  });
+}
+
+window.addEventListener('resize', updateWidgetSize);
+```
+
+## Error Handling
+
+Set up comprehensive error handling:
+
+```javascript
+// Set up comprehensive error handling
+window.OpenSesameCellConfig.onError = function(error) {
+  // Log to console
+  console.error('Widget error:', error);
+  
+  // Send to error tracking service
+  if (window.errorTrackingService) {
+    window.errorTrackingService.captureException(error.error, {
+      tags: {
+        widget: true,
+        errorType: error.type
+      },
+      extra: error.context
+    });
+  }
+  
+  // Handle based on error type
+  switch (error.type) {
+    case 'initialization':
+      // Show retry button
+      showRetryButton(() => {
+        window.OpenSesameCellConfig.retry();
+      });
+      break;
+      
+    case 'network':
+      // Show offline indicator
+      showOfflineIndicator();
+      break;
+      
+    default:
+      // Show generic error message
+      showErrorMessage('Widget temporarily unavailable');
+  }
+};
+
+// Check widget state on page load
+window.addEventListener('load', () => {
+  const state = window.OpenSesameCellConfig.getState();
+  if (state.hasError) {
+    console.warn('Widget has an error:', state.error);
+  }
+});
+```
+
+## Event Callbacks
+
+React to widget lifecycle events:
+
+```javascript
+// Track widget interactions
+window.OpenSesameCellConfig.onShow = function() {
+  console.log('Widget opened');
+  window.OpenSesameCellConfig.trackEvent('widget-opened');
+  
+  // Pause video when widget opens
+  pauseBackgroundVideo();
+};
+
+window.OpenSesameCellConfig.onHide = function() {
+  console.log('Widget closed');
+  window.OpenSesameCellConfig.trackEvent('widget-closed');
+  
+  // Resume video when widget closes
+  resumeBackgroundVideo();
+};
+
+window.OpenSesameCellConfig.onMessage = function(message) {
+  console.log('New message:', message.content);
+  
+  // Show browser notification
+  if (Notification.permission === 'granted') {
+    new Notification('New message', {
+      body: message.content,
+      icon: '/icon.png'
+    });
+  }
+  
+  // Update page title with unread count
+  updatePageTitle();
+};
+
+window.OpenSesameCellConfig.onReady = function() {
+  console.log('Widget ready');
+  
+  // Identify user once widget is ready
+  if (window.currentUser) {
+    window.OpenSesameCellConfig.identify({
+      user_id: window.currentUser.id,
+      email: window.currentUser.email
+    });
+  }
+};
+```
+
+## Complete Integration
+
+Full integration example with all features:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My App with OpenSesame Widget</title>
+</head>
+<body>
+  <h1>Welcome to My App</h1>
+  
+  <script>
+    // Initialize widget configuration
+    window.OpenSesameCellConfig = {
+      cellId: 'your-cell-id-here',
+      primaryColor: '#5E17EB',
+      borderRadius: 32
+    };
+    
+    // Set up callbacks
+    window.OpenSesameCellConfig.onReady = function() {
+      console.log('Widget is ready!');
+      
+      // Identify user when widget is ready
+      if (window.currentUser) {
+        window.OpenSesameCellConfig.identify({
+          user_id: window.currentUser.id,
+          email: window.currentUser.email,
+          name: window.currentUser.name
+        });
+      }
+      
+      // Track page view
+      window.OpenSesameCellConfig.trackPageView();
+    };
+    
+    window.OpenSesameCellConfig.onShow = function() {
+      window.OpenSesameCellConfig.trackEvent('widget-opened');
+    };
+    
+    window.OpenSesameCellConfig.onHide = function() {
+      window.OpenSesameCellConfig.trackEvent('widget-closed');
+    };
+    
+    window.OpenSesameCellConfig.onMessage = function(message) {
+      console.log('New message:', message);
+      // Handle new messages (notifications, etc.)
+    };
+    
+    window.OpenSesameCellConfig.onError = function(error) {
+      console.error('Widget error:', error);
+      if (error.type === 'initialization') {
+        setTimeout(() => {
+          window.OpenSesameCellConfig.retry();
+        }, 2000);
+      }
+    };
+  </script>
+  
+  <script src="https://cell.opensesame.dev/widget.js" async></script>
+</body>
+</html>
+```
+

@@ -1,0 +1,393 @@
+---
+title: 'API Reference'
+description: 'Complete reference for all widget API methods and event callbacks'
+---
+
+Control the widget programmatically and react to widget events using the API methods and callbacks.
+
+## Widget Control
+
+### show()
+
+Programmatically show or expand the widget.
+
+```javascript
+window.OpenSesameCellConfig.show();
+```
+
+### hide()
+
+Programmatically hide or collapse the widget.
+
+```javascript
+window.OpenSesameCellConfig.hide();
+```
+
+### destroy()
+
+Remove the widget from the page and clean up resources.
+
+```javascript
+window.OpenSesameCellConfig.destroy();
+```
+
+<Warning>
+Calling `destroy()` permanently removes the widget. You'll need to reload the page to restore it.
+</Warning>
+
+## User Identification
+
+### identify(userData)
+
+Identify the current user for analytics and personalization.
+
+```javascript
+window.OpenSesameCellConfig.identify({
+  user_id: 'user-123',
+  email: 'user@example.com',
+  name: 'John Doe',
+  company: {
+    id: 'company-456',
+    name: 'Acme Corp'
+  },
+  custom_attributes: {
+    plan: 'pro',
+    signup_date: '2024-01-01',
+    lifetime_value: 5000
+  }
+});
+```
+
+<ParamField body="userData" type="object">
+  <ParamField body="user_id" type="string">
+    Unique user identifier
+  </ParamField>
+  <ParamField body="email" type="string">
+    User email address
+  </ParamField>
+  <ParamField body="name" type="string">
+    User's full name
+  </ParamField>
+  <ParamField body="company" type="object">
+    Company information with `id` and `name`
+  </ParamField>
+  <ParamField body="custom_attributes" type="object">
+    Any additional user metadata
+  </ParamField>
+</ParamField>
+
+<Tip>
+You can call `identify()` multiple times - new data will be merged with existing data.
+</Tip>
+
+### update(userData)
+
+Convenience method to update user metadata (alias for `identify()`).
+
+```javascript
+window.OpenSesameCellConfig.update({
+  email: 'newemail@example.com',
+  custom_attributes: {
+    plan: 'enterprise'
+  }
+});
+```
+
+## Event Tracking
+
+### trackEvent(eventName, properties)
+
+Track custom events for analytics.
+
+```javascript
+window.OpenSesameCellConfig.trackEvent('purchase-completed', {
+  price: 99.99,
+  currency: 'USD',
+  product: 'Premium Plan',
+  order_id: 'order-123'
+});
+```
+
+<ParamField body="eventName" type="string" required>
+  Event name
+</ParamField>
+
+<ParamField body="properties" type="object">
+  Event properties and metadata
+</ParamField>
+
+<Note>
+User identification data is automatically included with tracked events.
+</Note>
+
+### trackPageView(properties)
+
+Convenience method to track page views.
+
+```javascript
+window.OpenSesameCellConfig.trackPageView({
+  title: document.title,
+  referrer: document.referrer,
+  path: window.location.pathname
+});
+```
+
+<ParamField body="properties" type="object">
+  Additional page view properties
+</ParamField>
+
+Automatically captures `url` from `window.location.href` if not provided.
+
+## Configuration Updates
+
+### updateConfig(newConfig)
+
+Update widget configuration at runtime.
+
+```javascript
+window.OpenSesameCellConfig.updateConfig({
+  primaryColor: '#FF5733',
+  borderRadius: 20,
+  defaultWidth: 600,
+  bottomMargin: 30,
+  placeholderText: 'Ask me anything!'
+});
+```
+
+<ParamField body="newConfig" type="object">
+  Partial configuration object with properties to update
+</ParamField>
+
+**Supported properties:**
+- `primaryColor`, `secondaryColor`, `accentColor`, `textColor`
+- `borderColor`, `glowColor`, `borderWidth`
+- `borderRadius`, `defaultWidth`, `bottomMargin`
+- `placeholderText`, `suggestedQuestions`, `suggestedQuestionsBehavior`
+- `collapsedStyle`, `collapseIcon`, `logo`
+
+## Widget State
+
+### getState()
+
+Get current widget state for debugging and monitoring.
+
+```javascript
+const state = window.OpenSesameCellConfig.getState();
+console.log(state);
+// {
+//   version: '1.0.0-1234567890',
+//   ready: true,
+//   hasError: false,
+//   error: null,
+//   cellId: 'your-cell-id',
+//   userId: 'user-123',
+//   userIdentified: true,
+//   pendingEvents: 0,
+//   timestamp: '2024-01-01T12:00:00.000Z'
+// }
+```
+
+**Returns:**
+- `version` (string): Widget version
+- `ready` (boolean): Whether widget is ready
+- `hasError` (boolean): Whether widget has an error
+- `error` (object|null): Current error object (if any)
+- `cellId` (string|null): Current cell ID
+- `userId` (string|null): Current user ID
+- `userIdentified` (boolean): Whether user has been identified
+- `pendingEvents` (number): Number of queued events
+- `timestamp` (string): Current timestamp (ISO format)
+
+### version
+
+Get widget version string.
+
+```javascript
+const version = window.OpenSesameCellConfig.version;
+console.log(version); // '1.0.0-1234567890'
+```
+
+## Error Handling
+
+### hasError
+
+Check if widget has an error.
+
+```javascript
+if (window.OpenSesameCellConfig.hasError) {
+  console.error('Widget has an error');
+}
+```
+
+### getError()
+
+Get current error object.
+
+```javascript
+const error = window.OpenSesameCellConfig.getError();
+if (error) {
+  console.error('Error type:', error.type);
+  console.error('Error message:', error.message);
+  console.error('Error context:', error.context);
+}
+```
+
+**Error object structure:**
+- `type` (string): Error type (`'initialization'`, `'rendering'`, `'react_boundary'`, `'network'`)
+- `message` (string): Error message
+- `error` (Error): Original error object
+- `context` (object): Additional error context
+- `timestamp` (string): Error timestamp (ISO format)
+
+### clearError()
+
+Clear current error state.
+
+```javascript
+window.OpenSesameCellConfig.clearError();
+```
+
+### retry()
+
+Retry widget initialization after an error.
+
+```javascript
+try {
+  await window.OpenSesameCellConfig.retry();
+  console.log('Widget retry successful');
+} catch (error) {
+  console.error('Widget retry failed:', error);
+}
+```
+
+**Returns:** Promise that resolves when retry completes
+
+## Event Callbacks
+
+Set callbacks to react to widget lifecycle events and user interactions.
+
+### onReady
+
+Called when the widget is fully initialized and ready.
+
+```javascript
+window.OpenSesameCellConfig.onReady = function() {
+  console.log('Widget is ready!');
+  // Widget is now fully initialized
+};
+```
+
+<Note>
+You can also check `window.OpenSesameCellConfig.ready` (boolean) to check if widget is ready.
+</Note>
+
+### onShow
+
+Called when the widget is shown or expanded.
+
+```javascript
+window.OpenSesameCellConfig.onShow = function() {
+  console.log('Widget was shown');
+  // Track analytics, update UI, etc.
+  window.OpenSesameCellConfig.trackEvent('widget-opened');
+};
+```
+
+### onHide
+
+Called when the widget is hidden or collapsed.
+
+```javascript
+window.OpenSesameCellConfig.onHide = function() {
+  console.log('Widget was hidden');
+  // Track analytics, update UI, etc.
+  window.OpenSesameCellConfig.trackEvent('widget-closed');
+};
+```
+
+### onMessage
+
+Called when a new assistant message is received.
+
+```javascript
+window.OpenSesameCellConfig.onMessage = function(message) {
+  console.log('New message received:', message);
+  // {
+  //   messageId: 'msg-123',
+  //   type: 'assistant',
+  //   content: 'Hello! How can I help you?',
+  //   timestamp: '2024-01-01T12:00:00.000Z',
+  //   threadId: 'thread-456'
+  // }
+  
+  // Trigger notifications, analytics, etc.
+  showNotification('New message from assistant');
+  window.OpenSesameCellConfig.trackEvent('message-received', {
+    messageId: message.messageId,
+    threadId: message.threadId
+  });
+};
+```
+
+**Message object:**
+- `messageId` (string): Unique message identifier
+- `type` (string): Message type (`'assistant'`)
+- `content` (string): Message content
+- `timestamp` (string): Message timestamp (ISO format)
+- `threadId` (string): Thread/conversation ID
+
+### onError
+
+Called when an error occurs in the widget.
+
+```javascript
+window.OpenSesameCellConfig.onError = function(error) {
+  console.error('Widget error:', error);
+  // {
+  //   type: 'initialization',
+  //   message: 'Failed to fetch configuration',
+  //   error: Error(...),
+  //   context: { cellId: 'your-cell-id' },
+  //   timestamp: '2024-01-01T12:00:00.000Z'
+  // }
+  
+  // Handle errors: show fallback UI, retry, send to error tracking service, etc.
+  if (error.type === 'initialization') {
+    // Widget failed to initialize - retry after a delay
+    setTimeout(() => {
+      window.OpenSesameCellConfig.retry().catch(err => {
+        console.error('Retry failed:', err);
+      });
+    }, 2000);
+  } else if (error.type === 'network') {
+    // Network error - show offline message
+    showOfflineMessage();
+  }
+  
+  // Send to error tracking service
+  sendToErrorTracking(error);
+};
+```
+
+**Error types:**
+- `'initialization'`: Widget failed to initialize
+- `'rendering'`: Widget failed to render
+- `'react_boundary'`: React component error
+- `'network'`: Network/API error
+
+### onUnreadCountChange
+
+Called when the unread message count changes.
+
+```javascript
+window.OpenSesameCellConfig.onUnreadCountChange = function(count) {
+  console.log('Unread count:', count);
+  // Update badge, notification, etc.
+  updateUnreadBadge(count);
+};
+```
+
+<Note>
+This callback is available but unread count tracking is not yet fully implemented.
+</Note>
+

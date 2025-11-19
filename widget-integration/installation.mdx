@@ -1,0 +1,105 @@
+---
+title: 'Installation'
+description: 'Install the OpenSesame widget in HTML, Next.js, React Native, and other frameworks'
+---
+
+Follow these instructions to install the OpenSesame widget in your application.
+
+## HTML
+
+Add the widget to any HTML page:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://cell.opensesame.dev/widget.css">
+</head>
+<body>
+  <script>
+    window.OpenSesameCellConfig = {
+      cellId: 'your-cell-id-here'
+    };
+  </script>
+  <script src="https://cell.opensesame.dev/widget.js" async></script>
+</body>
+</html>
+```
+
+<Note>
+The CSS link is optional - the widget will inject it automatically if not provided.
+</Note>
+
+## Next.js
+
+For Next.js applications, use the `Script` component:
+
+```javascript pages/_app.js
+import Script from 'next/script';
+
+export default function App({ Component, pageProps }) {
+  return (
+    <>
+      <Script id="opensesame-widget-config" strategy="beforeInteractive">
+        {`
+          window.OpenSesameCellConfig = {
+            cellId: 'your-cell-id-here'
+          };
+        `}
+      </Script>
+      <Script 
+        src="https://cell.opensesame.dev/widget.js" 
+        strategy="lazyOnload"
+      />
+    </>
+  );
+}
+```
+
+<Tip>
+Use `strategy="beforeInteractive"` for the config script to ensure it loads before the widget script initializes.
+</Tip>
+
+## React Native
+
+For React Native, use a WebView component:
+
+```javascript
+import { WebView } from 'react-native-webview';
+
+export default function App() {
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="https://cell.opensesame.dev/widget.css">
+    </head>
+    <body>
+      <script>
+        window.OpenSesameCellConfig = {
+          cellId: 'your-cell-id-here'
+        };
+      </script>
+      <script src="https://cell.opensesame.dev/widget.js" async></script>
+    </body>
+    </html>
+  `;
+
+  return (
+    <WebView
+      source={{ html: htmlContent }}
+      style={{ flex: 1 }}
+    />
+  );
+}
+```
+
+## Other Frameworks
+
+The widget works with any framework that supports standard HTML and JavaScript. Simply include the configuration script and widget script in your application's HTML output.
+
+<Info>
+The widget is framework-agnostic and works with React, Vue, Angular, Svelte, and any other JavaScript framework.
+</Info>
+
