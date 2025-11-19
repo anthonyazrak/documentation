@@ -375,19 +375,3 @@ window.OpenSesameCellConfig.onError = function(error) {
 - `'react_boundary'`: React component error
 - `'network'`: Network/API error
 
-### onUnreadCountChange
-
-Called when the unread message count changes.
-
-```javascript
-window.OpenSesameCellConfig.onUnreadCountChange = function(count) {
-  console.log('Unread count:', count);
-  // Update badge, notification, etc.
-  updateUnreadBadge(count);
-};
-```
-
-<Note>
-This callback is available but unread count tracking is not yet fully implemented.
-</Note>
-
