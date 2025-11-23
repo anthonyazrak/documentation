@@ -3,11 +3,11 @@
   "theme": "mint",
   "name": "OpenSesame Widget Documentation",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#ed715a",
+    "light": "#f5a896",
+    "dark": "#c95a45"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/logo/opensesame-white%20logo.png",
   "navigation": {
     "tabs": [
       {
