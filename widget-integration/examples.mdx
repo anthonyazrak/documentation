@@ -28,6 +28,50 @@ Simple HTML integration:
 </html>
 ```
 
+## PHP Integration
+
+PHP integration with user authentication:
+
+```php
+<?php
+// Set your PHP variables before the snippet
+// $userId = "your-user-id";
+// $authToken = "your-auth-token";
+?>
+
+<!-- Optional: CSS link (widget will inject it automatically if not present) -->
+<link
+  rel="stylesheet"
+  href="https://cell.opensesame.dev/opensesame-cell.css"
+/>
+
+<script>
+  window.OpenSesameCellConfig = {
+    config: {
+      "cellId": "e2c67c34-bad6-4c83-be9d-398a8ffb907f",
+      "userId": <?php echo json_encode($userId); ?>,
+      "auth": {
+        "Authorization": <?php echo json_encode("Bearer " . $authToken); ?>
+      },
+      "additional_params": {}
+    }
+  };
+
+  (function () {
+    // Use timestamp for cache-busting (avoids CORS issues with redirects)
+    const version = Date.now().toString();
+    const s = document.createElement("script");
+    s.src = "https://cell.opensesame.dev/widget.js?v=" + version;
+    s.async = true;
+    document.head.appendChild(s);
+  })();
+</script>
+```
+
+<Note>
+Replace `"e2c67c34-bad6-4c83-be9d-398a8ffb907f"` with your actual cell ID. Uncomment and set `$userId` and `$authToken` variables before the snippet if you need user authentication.
+</Note>
+
 ## User Identification
 
 Identify users when they log in:
