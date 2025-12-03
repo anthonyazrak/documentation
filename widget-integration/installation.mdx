@@ -30,6 +30,50 @@ Add the widget to any HTML page:
 The CSS link is optional - the widget will inject it automatically if not provided.
 </Note>
 
+## PHP
+
+For PHP applications, embed the widget configuration using PHP variables:
+
+```php
+<?php
+// Set your PHP variables before the snippet
+// $userId = "your-user-id";
+// $authToken = "your-auth-token";
+?>
+
+<!-- Optional: CSS link (widget will inject it automatically if not present) -->
+<link
+  rel="stylesheet"
+  href="https://cell.opensesame.dev/opensesame-cell.css"
+/>
+
+<script>
+  window.OpenSesameCellConfig = {
+    config: {
+      "cellId": "your-cell-id-here",
+      "userId": <?php echo json_encode($userId ?? null); ?>,
+      "auth": {
+        "Authorization": <?php echo json_encode(isset($authToken) ? "Bearer " . $authToken : null); ?>
+      },
+      "additional_params": {}
+    }
+  };
+
+  (function () {
+    // Use timestamp for cache-busting (avoids CORS issues with redirects)
+    const version = Date.now().toString();
+    const s = document.createElement("script");
+    s.src = "https://cell.opensesame.dev/widget.js?v=" + version;
+    s.async = true;
+    document.head.appendChild(s);
+  })();
+</script>
+```
+
+<Tip>
+Use `json_encode()` to safely output PHP variables into JavaScript. The null coalescing operator (`??`) ensures the code works even if `$userId` or `$authToken` are not set.
+</Tip>
+
 ## Next.js
 
 For Next.js applications, use the `Script` component:
